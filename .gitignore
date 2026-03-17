@@ -1,0 +1,28 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables and local secrets
+.env
+.streamlit/secrets.toml
+
+# Logs and runtime files
+logs/
+*.log
+
+# Generated data artifacts
+data/
+
+# Tooling and editor noise
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+.DS_Store

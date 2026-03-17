@@ -1,54 +1,49 @@
-"""
-ViewZen RAG Chatbot – Configuration
+"""Project configuration loaded from `.env`.
+
+This file is intentionally simple and shared by all modules.
 """
 
-import os
 from pathlib import Path
+
 from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-
-load_dotenv()
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
-    # OpenAI
-    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
-    llm_model: str = os.getenv("LLM_MODEL", "gpt-4o-mini")
+    # LLM
+    google_api_key: str = ""
+    llm_model: str = "gemini-2.0-flash"
 
-    # Embedding
-    embedding_model: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    # Embeddings
+    embedding_model: str = "all-MiniLM-L6-v2"
+    embedding_dim: int = 384
 
     # Pinecone
-    pinecone_api_key: str = os.getenv("PINECONE_API_KEY", "")
-    pinecone_index_name: str = os.getenv("PINECONE_INDEX_NAME", "viewzen-docs")
-    pinecone_cloud: str = os.getenv("PINECONE_CLOUD", "aws")
-    pinecone_region: str = os.getenv("PINECONE_REGION", "us-east-1")
+    pinecone_api_key: str = ""
+    pinecone_index_name: str = "viewzen-docs"
+    pinecone_cloud: str = "aws"
+    pinecone_region: str = "us-east-1"
 
-    # Data paths
-    raw_data_dir: str = os.getenv("RAW_DATA_DIR", str(BASE_DIR / "data" / "raw"))
-    processed_data_dir: str = os.getenv(
-        "PROCESSED_DATA_DIR", str(BASE_DIR / "data" / "processed")
-    )
+    # Retrieval / chunking
+    chunk_size: int = 1000
+    chunk_overlap: int = 200
+    top_k: int = 5
 
-    # Chunking
-    chunk_size: int = int(os.getenv("CHUNK_SIZE", "1000"))
-    chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "200"))
+    # Runtime
+    log_level: str = "INFO"
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
 
-    # Retrieval
-    top_k: int = int(os.getenv("TOP_K", "5"))
-
-    # API
-    api_host: str = os.getenv("API_HOST", "0.0.0.0")
-    api_port: int = int(os.getenv("API_PORT", "8000"))
-
-    # Logging
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
+    # Files
+    data_dir: str = "data"
 
     class Config:
         env_file = ".env"
-        extra = "allow"
+        extra = "ignore"
 
 
 settings = Settings()
+
+# Commonly used paths
+DATA_DIR = Path(settings.data_dir)
+RAW_PATH = DATA_DIR / "raw" / "scraped_docs.json"
+CHUNKS_PATH = DATA_DIR / "processed" / "chunks.json"
